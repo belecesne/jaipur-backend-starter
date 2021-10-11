@@ -1,9 +1,5 @@
 import * as gameService from "./gameService"
 
-import request from "supertest"
-import app from "../app"
-import lodash from "lodash"
-
 describe("Game service", () => {
   test("should init a deck", () => {
     const defaultDeck = gameService.initDeck()
