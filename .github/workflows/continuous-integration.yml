@@ -22,11 +22,11 @@ jobs:
         run: npm install
       - name: Run tests
         run: npm run test
-      - name: Upload math result for job 2
+      - name: Upload math result for job test
         uses: actions/upload-artifact@v2
         with:
-          name: coverage
-          path: coverage/routes/gameRouter.js.html
+          name: coverage_test
+          path: 'coverage/**'
   lint:
     runs-on: ubuntu-latest
     steps:
