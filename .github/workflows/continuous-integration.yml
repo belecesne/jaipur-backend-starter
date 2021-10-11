@@ -26,7 +26,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: coverage
-          path: gameRouter.js.html
+          path: coverage/routes/gameRouter.js.html
   lint:
     runs-on: ubuntu-latest
     steps:
