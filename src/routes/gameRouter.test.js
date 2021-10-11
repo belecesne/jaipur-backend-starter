@@ -94,7 +94,7 @@ describe("Game router", () => {
 
 describe("missing arguments", () => {
   test("should create a game", async () => {
-    const response = await request(app).post("/").send({ name: "test" })
+    const response = await request(app).post("/games").send()
     expect(response.statusCode).toBe(400)
   })
 })
