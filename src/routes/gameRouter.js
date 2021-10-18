@@ -1,5 +1,6 @@
 import express from "express"
 import * as gameService from "../services/gameService"
+import * as databaseService from "../services/databaseService"
 
 const router = express.Router()
 
@@ -10,6 +11,25 @@ router.post("/", function (req, res) {
   }
   const newGame = gameService.createGame(req.body.name)
   res.status(201).json(newGame)
+})
+
+// GET all games
+router.get("/", function (req, res) {
+  const games = databaseService.getGames()
+  res.status(201).json(games)
+})
+
+// GET game by id
+router.get("/:id", function (req, res) {
+  const idSearch = Number.parseInt(req.params.id)
+  if (!idSearch) {
+    return res.status(400).send("Missing name parameter")
+  }
+  const gameRes = databaseService.getGame(idSearch)
+  if (gameRes.id !== idSearch) {
+    return res.status(404).send("Pas de game " + idSearch)
+  }
+  res.status(201).json(gameRes)
 })
 
 export default router
