@@ -7,6 +7,7 @@ afterEach(() => {
 })
 
 describe("Database service", () => {
+
   test("should save a game in new file", () => {
     const games = databaseService.saveGame({ id: 1 })
     expect(fs.writeFileSync).toHaveBeenCalled()
@@ -32,5 +33,17 @@ describe("Database service", () => {
     const games = databaseService.getGames()
     expect(games.length).toBe(2)
     expect(games[0].id).toBe(1)
+  })
+
+  test("should find game by id", () => {
+    fs.readFileSync.mockImplementation(() => `[{"id": 1}, {"id": 2}]`)
+    const game = databaseService.getGame(2)
+    expect(game).toStrictEqual({"id": 2})
+  })
+
+  test("should not find game by id", () => {
+    fs.readFileSync.mockImplementation(() => `[{"id": 1}, {"id": 2}]`)
+    const game = databaseService.getGame(3)
+    expect(game).toStrictEqual(undefined)
   })
 })
