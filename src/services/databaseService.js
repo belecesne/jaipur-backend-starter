@@ -3,6 +3,11 @@ import path from "path"
 
 const DATABASE_FILE = path.join(__dirname, "../../storage/database.json")
 
+// Get game by ID
+export function getGame(id) {
+  return getGames().find((e) => e.id === id)
+}
+
 // Read the file storage/database.json and return the parsed array of games.
 export function getGames() {
   try {
