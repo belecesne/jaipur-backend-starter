@@ -15,6 +15,20 @@ describe("Game service", () => {
     expect(drawedCard).toStrictEqual(["camel"])
   })
 
+  test("draw Cards but no cards", () => {
+    const deck = []
+    const drawedCard = gameService.drawCards(deck, 1)
+    expect(deck.length).toBe(0)
+    expect(drawedCard).toStrictEqual([])
+  })
+
+  test("draw default Cards", () => {
+    const deck = []
+    const drawedCard = gameService.drawCards(deck)
+    expect(deck.length).toBe(0)
+    expect(drawedCard).toStrictEqual([])
+  })
+
   test("should put camels from hand to herd", () => {
     const game = {
       _players: [

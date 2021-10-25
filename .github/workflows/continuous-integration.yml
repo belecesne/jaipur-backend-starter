@@ -3,10 +3,11 @@ on:
   push:
     branches:    
       - master
+      - 'feature/**'
   pull_request:
-    branches:    
-      - feature/**
-      - bugfix/**
+    branches:
+      - 'feature/**'
+      - 'bugfix/**'
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -28,3 +29,4 @@ jobs:
         with:
           name: code-coverage-report
           path: coverage/**
+          path: 'coverage/**'

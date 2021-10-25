@@ -91,3 +91,10 @@ describe("Game router", () => {
     expect(response.body).toStrictEqual(expectedGame)
   })
 })
+
+describe("missing arguments", () => {
+  test("should create a game", async () => {
+    const response = await request(app).post("/games").send()
+    expect(response.statusCode).toBe(400)
+  })
+})
