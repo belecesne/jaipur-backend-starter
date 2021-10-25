@@ -5,7 +5,7 @@ const DATABASE_FILE = path.join(__dirname, "../../storage/database.json")
 
 // Get game by ID
 export function getGame(id) {
-  return getGames().find((e) => e.id === id)
+  return getGames().find((e) => Number.parseInt(e.id) === Number.parseInt(id))
 }
 
 // Read the file storage/database.json and return the parsed array of games.
