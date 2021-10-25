@@ -13,6 +13,7 @@ router.post("/", function (req, res) {
   res.status(201).json(newGame)
 })
 
+
 router.put("/:id/take-good", function (req, res) {
   const gameId = Number.parseInt(req.params.id)
   if (!req.headers.playerindex)
@@ -24,6 +25,24 @@ router.put("/:id/take-good", function (req, res) {
   const game = databaseService.getGame(gameId)
   if (!game)
     return res.status(404).send("Game " + gameId + " not found")
+
+// GET all games
+router.get("/", function (req, res) {
+  const games = databaseService.getGames()
+  res.status(201).json(games)
+})
+
+// GET game by id
+router.get("/:id", function (req, res) {
+  const idSearch = Number.parseInt(req.params.id)
+  if (!idSearch) {
+    return res.status(400).send("Missing name parameter")
+  }
+  const gameRes = databaseService.getGame(idSearch)
+  if (gameRes.id !== idSearch) {
+    return res.status(404).send("Pas de game " + idSearch)
+  }
+  res.status(201).json(gameRes)
 })
 
 export default router
