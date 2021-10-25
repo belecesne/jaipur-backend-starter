@@ -32,11 +32,7 @@ router.get("/:id", function (req, res) {
 // DELETE game by id
 router.delete("/:id", function (req, res) {
   const idSearch = Number.parseInt(req.params.id)
-  const game = databaseService.getGame(idSearch)
-  if (game === undefined) {
-    return res.status(404).send("Pas de game " + idSearch)
-  }
-  const gameRes = databaseService.deleteGame(game)
+  const gameRes = databaseService.deleteGame(idSearch)
   if (gameRes === false) {
     return res.status(404).send("Pas de game " + idSearch)
   }

@@ -45,4 +45,20 @@ describe("Database service", () => {
     const game = databaseService.getGame(3)
     expect(game).toStrictEqual(undefined)
   })
+
+  test("should delete game by id", () => {
+    fs.readFileSync.mockImplementation(() => {
+      return JSON.stringify([{ id: 1 }, { id: 2 }])
+    })
+    const resDelete = databaseService.deleteGame(1)
+    expect(resDelete).toStrictEqual(true)
+  })
+
+  test("should delete game by id not exist", () => {
+    fs.readFileSync.mockImplementation(() => {
+      return JSON.stringify([{ id: 1 }, { id: 2 }])
+    })
+    const resDelete = databaseService.deleteGame(4)
+    expect(resDelete).toStrictEqual(false)
+  })
 })

@@ -37,9 +37,9 @@ export function saveGame(game) {
 }
 
 // Delete a game from storage/database.json
-export function deleteGame(game) {
+export function deleteGame(id) {
   const games = getGames()
-  const gameIndex = games.findIndex((g) => g.id === game.id)
+  const gameIndex = games.findIndex((g) => g.id === id)
   let res = false
   if (gameIndex >= 0) {
     games.splice(gameIndex, 1)
