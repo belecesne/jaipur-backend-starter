@@ -35,11 +35,8 @@ router.get("/", function (req, res) {
 // GET game by id
 router.get("/:id", function (req, res) {
   const idSearch = Number.parseInt(req.params.id)
-  if (!idSearch) {
-    return res.status(400).send("Missing name parameter")
-  }
   const gameRes = databaseService.getGame(idSearch)
-  if (gameRes.id !== idSearch) {
+  if (gameRes === undefined) {
     return res.status(404).send("Pas de game " + idSearch)
   }
   res.status(201).json(gameRes)
