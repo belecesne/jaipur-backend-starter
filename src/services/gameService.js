@@ -83,3 +83,21 @@ export function createGame(name) {
   databaseService.saveGame(game)
   return game
 }
+
+export function takeGood(game, playerIndex, good) {
+  if (playerIndex !== game.currentPlayerIndex)
+    throw "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
+  const player = game._players[playerIndex]
+  const handCount = player.hand.filter((e) => e !== "camel").length
+  console.log("here")
+  if (handCount + 1 > 7)
+    throw "Too many cards: " + handCount
+  if (!game.market.includes(good))
+    throw good + ": good not found"
+
+  console.log("Game " + game + ", player " + playerIndex + ", removing " + good)
+  player.hand.push(good)
+  game.market.splice(game.market.findIndex((e) => e === good), 1)
+  game.market.push(drawCards(game._deck, 1)[0])
+  return game
+}

@@ -35,3 +35,31 @@ export function saveGame(game) {
   fs.writeFileSync(path.join(DATABASE_FILE), JSON.stringify(games))
   return games
 }
+
+// Delete a game from storage/database.json
+export function deleteGame(id) {
+  const games = getGames()
+  const gameIndex = games.findIndex((g) => g.id === id)
+  let res = false
+  if (gameIndex >= 0) {
+    games.splice(gameIndex, 1)
+    res = true
+  }
+  try {
+    fs.mkdirSync(path.dirname(DATABASE_FILE))
+  } catch (e) {
+    // Do nothing
+  }
+  fs.writeFileSync(path.join(DATABASE_FILE), JSON.stringify(games))
+  return res
+}
+
+// Delete a game from storage/database.json
+export function deleteAllGame() {
+  try {
+    fs.mkdirSync(path.dirname(DATABASE_FILE))
+  } catch (e) {
+    // Do nothing
+  }
+  fs.writeFileSync(path.join(DATABASE_FILE), JSON.stringify([]))
+}
