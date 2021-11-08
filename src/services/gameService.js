@@ -141,3 +141,16 @@ export function exchange(game, playerIndex, take, give) {
   addItems(player.hand, take)
   return game
 }
+
+export function takeAllCamels(game, playerIndex) {
+  if (playerIndex !== game.currentPlayerIndex)
+    throw "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
+  const player = game._players[playerIndex]
+
+  const camels = game.market.filter((e) => e === "camel")
+  console.log("before:\n" + camels + "\n" + game.market + "\n" + player.hand)
+  removeItems(game.market, camels)
+  addItems(player.hand, camels)
+  console.log("after:\n" + camels + "\n" + game.market + "\n" + player.hand)
+  return game
+}
