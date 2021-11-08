@@ -13,6 +13,29 @@ router.post("/", function (req, res) {
   res.status(201).json(newGame)
 })
 
+
+// Listen to PUT
+router.put("/:id/take-good", function (req, res) {
+  const gameId = Number.parseInt(req.params.id)
+  const playerIndex = parseInt(req.headers.playerindex)
+  if (playerIndex === undefined)
+    return res.status(400).send("Missing playerindex header")
+  const good = req.body.good
+  if (!good)
+    return res.status(400).send("Missing good parameter")
+  const game = databaseService.getGame(gameId)
+  if (!game)
+    return res.status(404).send("Game " + gameId + " not found")
+
+  try {
+    const out = gameService.takeGood(game, playerIndex, good)
+    return res.status(200).json(out)
+  } catch (e) {
+    console.error(e)
+    return res.status(400).send(e)
+  }
+})
+
 // GET all games
 router.get("/", function (req, res) {
   const games = databaseService.getGames()
@@ -24,7 +47,10 @@ router.get("/:id", function (req, res) {
   const idSearch = Number.parseInt(req.params.id)
   const gameRes = databaseService.getGame(idSearch)
   if (gameRes === undefined) {
-    return res.status(404).send("Pas de game " + idSearch)
+    return res
+      .status(404)
+      .json("Game " + idSearch + " does not exist")
+      .send("Pas de game " + idSearch)
   }
   res.status(201).json(gameRes)
 })
