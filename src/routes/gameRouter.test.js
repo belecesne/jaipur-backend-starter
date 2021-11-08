@@ -1,10 +1,13 @@
+import fs from "fs"
 import request from "supertest"
 import app from "../app"
 import lodash from "lodash"
 
 // Prevent database service to write tests game to filesystem
 jest.mock("fs")
-
+afterEach(() => {
+  jest.clearAllMocks()
+})
 // Prevent shuffle for tests
 jest.mock("lodash")
 lodash.shuffle.mockImplementation((array) => array)
@@ -96,5 +99,25 @@ describe("missing arguments", () => {
   test("should create a game", async () => {
     const response = await request(app).post("/games").send()
     expect(response.statusCode).toBe(400)
+  })
+})
+
+describe("get all games", () => {
+  test("should get all games", async () => {
+    fs.readFileSync.mockImplementation(() => {
+      return JSON.stringify([{ id: 1 }, { id: 2 }, { id: 3 }])
+    })
+    const response = await request(app).get("/games").send()
+    expect(response.statusCode).toBe(201)
+    expect(response.body).toStrictEqual([{ id: 1 }, { id: 2 }, { id: 3 }])
+  })
+
+  test("should get all games empty", async () => {
+    fs.readFileSync.mockImplementation(() => {
+      return JSON.stringify([])
+    })
+    const response = await request(app).get("/games").send()
+    expect(response.statusCode).toBe(201)
+    expect(response.body).toStrictEqual([])
   })
 })
