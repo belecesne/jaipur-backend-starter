@@ -36,6 +36,31 @@ router.put("/:id/take-good", function (req, res) {
   }
 })
 
+// Exchange
+router.put("/:id/exchange", function (req, res) {
+  const gameId = Number.parseInt(req.params.id)
+  const playerIndex = parseInt(req.headers.playerindex)
+  if (playerIndex === undefined)
+    return res.status(400).send("Missing playerindex header")
+  const take = req.body.take
+  if (!take)
+    return res.status(400).send("Missing take parameter")
+  const give = req.body.give
+  if (!give)
+    return res.status(400).send("Missing give parameter")
+  const game = databaseService.getGame(gameId)
+  if (!game)
+    return res.status(404).send("Game " + gameId + " not found")
+
+  try {
+    const out = gameService.exchange(game, playerIndex, take, give)
+    return res.status(200).json(out)
+  } catch (e) {
+    console.error(e)
+    return res.status(400).send(e)
+  }
+})
+
 // GET all games
 router.get("/", function (req, res) {
   const games = databaseService.getGames()
