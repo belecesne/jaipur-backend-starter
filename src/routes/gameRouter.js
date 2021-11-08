@@ -34,15 +34,18 @@ router.delete("/:id", function (req, res) {
   const idSearch = Number.parseInt(req.params.id)
   const gameRes = databaseService.deleteGame(idSearch)
   if (gameRes === false) {
-    return res.status(404).send("Pas de game " + idSearch)
+    return res
+      .status(404)
+      .json("Game " + idSearch + " does not exist")
+      .send("Pas de game " + idSearch)
   }
-  res.status(200).json("OK")
+  res.status(200).json("Game " + idSearch + " deleted")
 })
 
 // DELETE all game
 router.delete("/", function (req, res) {
   databaseService.deleteAllGame()
-  res.status(200).json("OK")
+  res.status(200).json("All game deleted")
 })
 
 export default router

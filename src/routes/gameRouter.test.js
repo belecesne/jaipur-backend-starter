@@ -1,9 +1,13 @@
 import request from "supertest"
 import app from "../app"
 import lodash from "lodash"
+import fs from "fs"
 
-// Prevent database service to write tests game to filesystem
 jest.mock("fs")
+afterEach(() => {
+  jest.clearAllMocks()
+})
+// Prevent database service to write tests game to filesystem
 
 // Prevent shuffle for tests
 jest.mock("lodash")
@@ -96,5 +100,63 @@ describe("missing arguments", () => {
   test("should create a game", async () => {
     const response = await request(app).post("/games").send()
     expect(response.statusCode).toBe(400)
+  })
+})
+
+describe("delete game by id", () => {
+  test("should delete one game by id", async () => {
+    fs.readFileSync.mockImplementation(() => {
+      return JSON.stringify([{ id: 1 }, { id: 2 }, { id: 3 }])
+    })
+    const response = await request(app).delete("/games/2").send()
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toStrictEqual("Game 2 deleted")
+  })
+
+  test("should delete one game by id which didn't exist", async () => {
+    fs.readFileSync.mockImplementation(() => {
+      return JSON.stringify([{ id: 1 }, { id: 2 }, { id: 3 }])
+    })
+    const response = await request(app).delete("/games/5").send()
+    expect(response.statusCode).toBe(404)
+    expect(response.body).toStrictEqual("Game 5 does not exist")
+  })
+
+  test("should delete one game by id from empty games", async () => {
+    fs.readFileSync.mockImplementation(() => {
+      return JSON.stringify([])
+    })
+    const response = await request(app).delete("/games/5").send()
+    expect(response.statusCode).toBe(404)
+    expect(response.body).toStrictEqual("Game 5 does not exist")
+  })
+
+  test("missing argument so delete all game", async () => {
+    fs.readFileSync.mockImplementation(() => {
+      return JSON.stringify([{ id: 1 }, { id: 2 }, { id: 3 }])
+    })
+    const response = await request(app).delete("/games/").send()
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toStrictEqual("All game deleted")
+  })
+})
+
+describe("delete all game", () => {
+  test("should delete all game", async () => {
+    fs.readFileSync.mockImplementation(() => {
+      return JSON.stringify([{ id: 1 }, { id: 2 }, { id: 3 }])
+    })
+    const response = await request(app).delete("/games").send()
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toStrictEqual("All game deleted")
+  })
+
+  test("should delete all game from empty games", async () => {
+    fs.readFileSync.mockImplementation(() => {
+      return JSON.stringify([])
+    })
+    const response = await request(app).delete("/games").send()
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toStrictEqual("All game deleted")
   })
 })
