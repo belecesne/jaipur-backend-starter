@@ -159,6 +159,8 @@ describe("delete all game", () => {
     const response = await request(app).delete("/games").send()
     expect(response.statusCode).toBe(200)
     expect(response.body).toStrictEqual("All game deleted")
+  })
+})
 
 describe("get all games", () => {
   test("should get all games", async () => {
