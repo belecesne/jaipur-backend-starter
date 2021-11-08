@@ -101,3 +101,43 @@ export function takeGood(game, playerIndex, good) {
   game.market.push(drawCards(game._deck, 1)[0])
   return game
 }
+
+function isSubset(set, sub) {
+  return sub.every((e) => set.includes(e)
+    && sub.filter((f) => f === e).length
+    <= set.filter((f) => f === e).length
+  )
+}
+
+function removeItem(set, elt) {
+  set.splice(set.indexOf(elt), 1)
+}
+
+function removeItems(set, elts) {
+  elts.forEach((e) => removeItem(set, e))
+}
+
+function addItems(set, elts) {
+  elts.forEach((e) => set.push(e))
+}
+
+export function exchange(game, playerIndex, take, give) {
+  if (playerIndex !== game.currentPlayerIndex)
+    throw "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
+  const player = game._players[playerIndex]
+
+  if (take.length !== give.length)
+    throw "Number of gards taken must be the same as given"
+  if (!isSubset(game.market, take))
+    throw "Taken cards are not all available in the market: "
+      + take + " is not a subset of " + game.market
+  if (!isSubset(player.hand, give))
+    throw "Given cards are not all in the player's hand: "
+      + give + " is not a subset of " + player.hand
+
+  removeItems(game.market, take)
+  removeItems(player.hand, give)
+  addItems(game.market, give)
+  addItems(player.hand, take)
+  return game
+}
