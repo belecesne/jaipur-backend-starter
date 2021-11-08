@@ -27,7 +27,10 @@ router.get("/:id", function (req, res) {
   }
   const gameRes = databaseService.getGame(idSearch)
   if (gameRes === undefined) {
-    return res.status(404).send("Pas de game " + idSearch)
+    return res
+      .status(404)
+      .json("Game " + idSearch + " does not exist")
+      .send("Pas de game " + idSearch)
   }
   res.status(201).json(gameRes)
 })

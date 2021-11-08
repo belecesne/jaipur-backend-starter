@@ -138,7 +138,7 @@ describe("get game by id", () => {
     })
     const response = await request(app).get("/games/5").send()
     expect(response.statusCode).toBe(404)
-    expect(response.body).toStrictEqual({})
+    expect(response.body).toStrictEqual("Game 5 does not exist")
   })
 
   test("should get one game from empty games", async () => {
@@ -147,7 +147,7 @@ describe("get game by id", () => {
     })
     const response = await request(app).get("/games/5").send()
     expect(response.statusCode).toBe(404)
-    expect(response.body).toStrictEqual({})
+    expect(response.body).toStrictEqual("Game 5 does not exist")
   })
 
   test("should get one game from empty gmes", async () => {
