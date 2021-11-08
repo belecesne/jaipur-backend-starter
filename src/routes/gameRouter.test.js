@@ -2,7 +2,6 @@ import fs from "fs"
 import request from "supertest"
 import app from "../app"
 import lodash from "lodash"
-import fs from "fs"
 
 jest.mock("fs")
 afterEach(() => {
