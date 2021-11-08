@@ -13,7 +13,6 @@ router.post("/", function (req, res) {
   res.status(201).json(newGame)
 })
 
-
 // Listen to PUT
 router.put("/:id/take-good", function (req, res) {
   const gameId = Number.parseInt(req.params.id)
@@ -21,11 +20,9 @@ router.put("/:id/take-good", function (req, res) {
   if (playerIndex === undefined)
     return res.status(400).send("Missing playerindex header")
   const good = req.body.good
-  if (!good)
-    return res.status(400).send("Missing good parameter")
+  if (!good) return res.status(400).send("Missing good parameter")
   const game = databaseService.getGame(gameId)
-  if (!game)
-    return res.status(404).send("Game " + gameId + " not found")
+  if (!game) return res.status(404).send("Game " + gameId + " not found")
 
   try {
     const out = gameService.takeGood(game, playerIndex, good)
@@ -43,14 +40,11 @@ router.put("/:id/exchange", function (req, res) {
   if (playerIndex === undefined)
     return res.status(400).send("Missing playerindex header")
   const take = req.body.take
-  if (!take)
-    return res.status(400).send("Missing take parameter")
+  if (!take) return res.status(400).send("Missing take parameter")
   const give = req.body.give
-  if (!give)
-    return res.status(400).send("Missing give parameter")
+  if (!give) return res.status(400).send("Missing give parameter")
   const game = databaseService.getGame(gameId)
-  if (!game)
-    return res.status(404).send("Game " + gameId + " not found")
+  if (!game) return res.status(404).send("Game " + gameId + " not found")
 
   try {
     const out = gameService.exchange(game, playerIndex, take, give)
@@ -68,8 +62,7 @@ router.put("/:id/take-camels", function (req, res) {
   if (playerIndex === undefined)
     return res.status(400).send("Missing playerindex header")
   const game = databaseService.getGame(gameId)
-  if (!game)
-    return res.status(404).send("Game " + gameId + " not found")
+  if (!game) return res.status(404).send("Game " + gameId + " not found")
 
   try {
     const out = gameService.takeAllCamels(game, playerIndex)

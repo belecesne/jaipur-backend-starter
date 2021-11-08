@@ -86,26 +86,30 @@ export function createGame(name) {
 
 export function takeGood(game, playerIndex, good) {
   if (playerIndex !== game.currentPlayerIndex)
-    throw "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
+    throw new Error(
+      "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
+    )
   const player = game._players[playerIndex]
   const handCount = player.hand.filter((e) => e !== "camel").length
   console.log("here")
-  if (handCount + 1 > 7)
-    throw "Too many cards: " + handCount
-  if (!game.market.includes(good))
-    throw good + ": good not found"
+  if (handCount + 1 > 7) throw new Error("Too many cards: " + handCount)
+  if (!game.market.includes(good)) throw new Error(good + ": good not found")
 
   console.log("Game " + game + ", player " + playerIndex + ", removing " + good)
   player.hand.push(good)
-  game.market.splice(game.market.findIndex((e) => e === good), 1)
+  game.market.splice(
+    game.market.findIndex((e) => e === good),
+    1
+  )
   game.market.push(drawCards(game._deck, 1)[0])
   return game
 }
 
 function isSubset(set, sub) {
-  return sub.every((e) => set.includes(e)
-    && sub.filter((f) => f === e).length
-    <= set.filter((f) => f === e).length
+  return sub.every(
+    (e) =>
+      set.includes(e) &&
+      sub.filter((f) => f === e).length <= set.filter((f) => f === e).length
   )
 }
 
@@ -123,17 +127,27 @@ function addItems(set, elts) {
 
 export function exchange(game, playerIndex, take, give) {
   if (playerIndex !== game.currentPlayerIndex)
-    throw "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
+    throw new Error(
+      "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
+    )
   const player = game._players[playerIndex]
 
   if (take.length !== give.length)
-    throw "Number of gards taken must be the same as given"
+    throw new Error("Number of gards taken must be the same as given")
   if (!isSubset(game.market, take))
-    throw "Taken cards are not all available in the market: "
-      + take + " is not a subset of " + game.market
+    throw new Error(
+      "Taken cards are not all available in the market: " +
+        take +
+        " is not a subset of " +
+        game.market
+    )
   if (!isSubset(player.hand, give))
-    throw "Given cards are not all in the player's hand: "
-      + give + " is not a subset of " + player.hand
+    throw new Error(
+      "Given cards are not all in the player's hand: " +
+        give +
+        " is not a subset of " +
+        player.hand
+    )
 
   removeItems(game.market, take)
   removeItems(player.hand, give)
@@ -144,7 +158,9 @@ export function exchange(game, playerIndex, take, give) {
 
 export function takeAllCamels(game, playerIndex) {
   if (playerIndex !== game.currentPlayerIndex)
-    throw "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
+    throw new Error(
+      "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
+    )
   const player = game._players[playerIndex]
 
   const camels = game.market.filter((e) => e === "camel")
