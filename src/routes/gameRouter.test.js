@@ -121,3 +121,41 @@ describe("get all games", () => {
     expect(response.body).toStrictEqual([])
   })
 })
+
+describe("get game by id", () => {
+  test("should get one game by id", async () => {
+    fs.readFileSync.mockImplementation(() => {
+      return JSON.stringify([{ id: 1 }, { id: 2 }, { id: 3 }])
+    })
+    const response = await request(app).get("/games/1").send()
+    expect(response.statusCode).toBe(201)
+    expect(response.body).toStrictEqual({ id: 1 })
+  })
+
+  test("should get one game which didn't exist", async () => {
+    fs.readFileSync.mockImplementation(() => {
+      return JSON.stringify([{ id: 1 }, { id: 2 }, { id: 3 }])
+    })
+    const response = await request(app).get("/games/5").send()
+    expect(response.statusCode).toBe(404)
+    expect(response.body).toStrictEqual({})
+  })
+
+  test("should get one game from empty games", async () => {
+    fs.readFileSync.mockImplementation(() => {
+      return JSON.stringify([])
+    })
+    const response = await request(app).get("/games/5").send()
+    expect(response.statusCode).toBe(404)
+    expect(response.body).toStrictEqual({})
+  })
+
+  test("should get one game from empty gmes", async () => {
+    fs.readFileSync.mockImplementation(() => {
+      return JSON.stringify([{ id: 1 }, { id: 2 }, { id: 3 }])
+    })
+    const response = await request(app).get("/games/").send()
+    expect(response.statusCode).toBe(201)
+    expect(response.body).toStrictEqual([{ id: 1 }, { id: 2 }, { id: 3 }])
+  })
+})
