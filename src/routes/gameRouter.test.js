@@ -103,7 +103,6 @@ describe("missing arguments", () => {
   })
 })
 
-
 describe("delete game by id", () => {
   test("should delete one game by id", async () => {
     fs.readFileSync.mockImplementation(() => {
