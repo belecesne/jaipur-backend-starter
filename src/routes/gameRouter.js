@@ -111,24 +111,4 @@ router.delete("/", function (req, res) {
   res.status(200).json("All game deleted")
 })
 
-// SELL CARDS
-router.put("/:id/sell", function (req, res) {
-  const gameId = Number.parseInt(req.params.id)
-  const playerIndex = parseInt(req.headers.playerindex)
-  if (playerIndex === undefined)
-    return res.status(400).send("Missing playerindex header")
-  const good = req.body.good
-  if (!good) return res.status(400).send("Missing good parameter")
-  const game = databaseService.getGame(gameId)
-  if (!game) return res.status(404).send("Game " + gameId + " not found")
-
-  try {
-    const out = gameService.takeGood(game, playerIndex, good)
-    return res.status(200).json(out)
-  } catch (e) {
-    console.error(e)
-    return res.status(400).send(e)
-  }
-})
-
 export default router
