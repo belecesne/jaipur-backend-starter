@@ -59,6 +59,8 @@ describe("Sell cards", () => {
   test("should sell cards but bad count", () => {
     const game = {
       id: 1,
+      name: "test",
+      currentPlayerIndex: 0,
     }
     expect(() => gameService.sellCards(game, 1, "gold", -1)).toThrow()
   })
@@ -78,6 +80,7 @@ describe("Sell cards", () => {
           score: 0,
         },
       ],
+      currentPlayerIndex: 0,
     }
     expect(() => gameService.sellCards(game, 0, "gold", 4)).toThrow()
   })
@@ -139,6 +142,69 @@ describe("Sell cards", () => {
       },
       _bonusTokens: {
         3: [2, 1, 2, 3, 1, 2],
+        4: [4, 6, 6, 4, 5, 5],
+        5: [8, 10, 9, 8, 10],
+      },
+    })
+  })
+  test("should sell cards all good but no bonus token", () => {
+    const game = {
+      id: 1,
+      name: "test",
+      _players: [
+        {
+          hand: ["diamonds", "diamonds", "diamonds", "diamonds", "gold"],
+          camelsCount: 0,
+          score: 0,
+        },
+        {
+          hand: ["gold", "gold", "gold", "gold", "gold"],
+          camelsCount: 0,
+          score: 0,
+        },
+      ],
+      currentPlayerIndex: 0,
+      tokens: {
+        diamonds: [7, 7, 5, 5, 5],
+        gold: [6, 6, 5, 5, 5],
+        silver: [5, 5, 5, 5, 5],
+        cloth: [5, 3, 3, 2, 2, 1, 1],
+        spice: [5, 3, 3, 2, 2, 1, 1],
+        leather: [4, 3, 2, 1, 1, 1, 1, 1, 1],
+      },
+      _bonusTokens: {
+        3: [2, 1, 2, 3, 1, 2, 3],
+        4: [4, 6, 6, 4, 5, 5],
+        5: [8, 10, 9, 8, 10],
+      },
+    }
+    const gameReturned = gameService.sellCards(game, 0, "gold", 1)
+    expect(gameReturned).toStrictEqual({
+      id: 1,
+      name: "test",
+      _players: [
+        {
+          hand: ["diamonds", "diamonds", "diamonds", "diamonds"],
+          camelsCount: 0,
+          score: 5,
+        },
+        {
+          hand: ["gold", "gold", "gold", "gold", "gold"],
+          camelsCount: 0,
+          score: 0,
+        },
+      ],
+      currentPlayerIndex: 0,
+      tokens: {
+        diamonds: [7, 7, 5, 5, 5],
+        gold: [6, 6, 5, 5],
+        silver: [5, 5, 5, 5, 5],
+        cloth: [5, 3, 3, 2, 2, 1, 1],
+        spice: [5, 3, 3, 2, 2, 1, 1],
+        leather: [4, 3, 2, 1, 1, 1, 1, 1, 1],
+      },
+      _bonusTokens: {
+        3: [2, 1, 2, 3, 1, 2, 3],
         4: [4, 6, 6, 4, 5, 5],
         5: [8, 10, 9, 8, 10],
       },
