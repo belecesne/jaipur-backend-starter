@@ -114,8 +114,8 @@ router.delete("/", function (req, res) {
 // SELL CARDS
 router.put("/:id/sell", function (req, res) {
   const gameId = Number.parseInt(req.params.id)
-  const playerIndex = parseInt(req.headers.playerindex)
-  if (playerIndex === undefined)
+  const playerIndex = Number.parseInt(req.headers.playerindex)
+  if (isNaN(playerIndex))
     return res.status(400).send("Missing playerindex header")
   const good = req.body.good
   const count = req.body.count
