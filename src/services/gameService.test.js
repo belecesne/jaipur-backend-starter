@@ -89,3 +89,63 @@ describe("Test takeGood", () => {
     expect(gameService.takeGood.bind(null, game, 0, "missing")).toThrow()
   })
 })
+
+describe("Test exchange", () => {
+  function baseGame() {
+    return {
+      market: ["cloth", "camel"],
+      _players: [{ hand: ["diamonds", "gold"], camelsCount: 0 }],
+      currentPlayerIndex: 0,
+    }
+  }
+
+  test("Normal case", () => {
+    const game = baseGame()
+    gameService.exchange(game, 0, ["cloth", "camel"], ["diamonds", "gold"])
+
+    expect(game.market.sort()).toEqual(["diamonds", "gold"].sort())
+    expect(game._players[0].hand.sort()).toEqual(["cloth", "camel"].sort())
+  })
+
+  test("Single item", () => {
+    const game = baseGame()
+    gameService.exchange(game, 0, ["cloth"], ["diamonds"])
+
+    expect(game.market.sort()).toEqual(["diamonds", "camel"].sort())
+    expect(game._players[0].hand.sort()).toEqual(["cloth", "gold"].sort())
+  })
+
+  test("No item", () => {
+    const game = baseGame()
+    gameService.exchange(game, 0, [], [])
+
+    expect(game.market.sort()).toEqual(["cloth", "camel"].sort())
+    expect(game._players[0].hand.sort()).toEqual(["diamonds", "gold"].sort())
+  })
+
+  test("Bad player index", () => {
+    const game = baseGame()
+    expect(gameService.exchange.bind(null, game, 1, [], [])).toThrow()
+  })
+
+  test("Different give and take length", () => {
+    const game = baseGame()
+    expect(
+      gameService.exchange.bind(null, game, 0, ["cloth"], ["diamonds", "gold"])
+    ).toThrow()
+  })
+
+  test("Given card not in hand", () => {
+    const game = baseGame()
+    expect(
+      gameService.exchange.bind(null, game, 0, ["cloth"], ["silver"])
+    ).toThrow()
+  })
+
+  test("Taken card not in market", () => {
+    const game = baseGame()
+    expect(
+      gameService.exchange.bind(null, game, 0, ["silver"], ["diamonds"])
+    ).toThrow()
+  })
+})
