@@ -149,3 +149,37 @@ describe("Test exchange", () => {
     ).toThrow()
   })
 })
+
+describe("Test takeAllCamels", () => {
+  function baseGame() {
+    return {
+      market: ["camel", "cloth", "camel"],
+      _players: [{ hand: ["diamonds"], camelsCount: 0 }],
+      currentPlayerIndex: 0,
+    }
+  }
+
+  test("Normal case", () => {
+    const game = baseGame()
+    gameService.takeAllCamels(game, 0)
+
+    expect(game.market).toEqual(["cloth"])
+    expect(game._players[0].hand.sort()).toEqual(
+      ["diamonds", "camel", "camel"].sort()
+    )
+  })
+
+  test("No camel", () => {
+    const game = baseGame()
+    game.market = ["cloth"]
+    gameService.takeAllCamels(game, 0)
+
+    expect(game.market).toEqual(["cloth"])
+    expect(game._players[0].hand).toEqual(["diamonds"])
+  })
+
+  test("Bad player id", () => {
+    const game = baseGame()
+    expect(gameService.takeAllCamels.bind(null, game, 1)).toThrow()
+  })
+})
