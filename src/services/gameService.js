@@ -191,7 +191,8 @@ export function sellCards(game, playerIndex, good, count) {
     }
   }
   try {
-    player.score += game._bonusTokens[count > 5 ? 5 : count].pop()
+    const bonusToken = game._bonusTokens[count > 5 ? 5 : count].pop()
+    player.score += bonusToken === undefined ? 0 : bonusToken
   } catch (e) {
     player.score += 0
   }
