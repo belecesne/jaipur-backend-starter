@@ -170,3 +170,30 @@ export function takeAllCamels(game, playerIndex) {
   console.log("after:\n" + camels + "\n" + game.market + "\n" + player.hand)
   return game
 }
+
+export function sellCards(game, playerIndex, good, count) {
+  if (playerIndex !== game.currentPlayerIndex)
+    throw new Error(
+      "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
+    )
+  const player = game._players[playerIndex]
+  const handGoodCount = player.hand.filter((e) => e === good).length
+  if (count < 1) {
+    throw new Error("Bad count: " + count + " is incorrect")
+  }
+  if (handGoodCount < count)
+    throw new Error("Not enough " + good + " in your hand")
+  const token = game.tokens[good]
+  for (let i = 0; i < count; i++) {
+    removeItem(player.hand, good)
+    if (token.length > 0) {
+      player.score += token.pop()
+    }
+  }
+  try {
+    player.score += game._bonusTokens[count > 5 ? 5 : count].pop()
+  } catch (e) {
+    player.score += 0
+  }
+  return game
+}

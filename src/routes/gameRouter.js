@@ -118,16 +118,18 @@ router.put("/:id/sell", function (req, res) {
   if (playerIndex === undefined)
     return res.status(400).send("Missing playerindex header")
   const good = req.body.good
+  const count = req.body.count
   if (!good) return res.status(400).send("Missing good parameter")
+  if (!count) return res.status(400).send("Missing count parameter")
   const game = databaseService.getGame(gameId)
   if (!game) return res.status(404).send("Game " + gameId + " not found")
 
   try {
-    const out = gameService.takeGood(game, playerIndex, good)
+    const out = gameService.sellCards(game, playerIndex, good, count)
     return res.status(200).json(out)
   } catch (e) {
     console.error(e)
-    return res.status(400).send(e)
+    return res.status(400).send(e.toString())
   }
 })
 
