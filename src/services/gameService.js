@@ -176,10 +176,10 @@ export function sellCards(game, playerIndex, good, count) {
     throw new Error(
       "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
     )
-  const player = game._players[playerIndex]
   if (count < 1) {
     throw new Error("Bad count: " + count + " is incorrect")
   }
+  const player = game._players[playerIndex]
   const handGoodCount = player.hand.filter((e) => e === good).length
   if (handGoodCount < count)
     throw new Error("Not enough " + good + " in your hand")
