@@ -91,7 +91,6 @@ export function takeGood(game, playerIndex, good) {
     )
   const player = game._players[playerIndex]
   const handCount = player.hand.filter((e) => e !== "camel").length
-  console.log("here")
   if (handCount + 1 > 7) throw new Error("Too many cards: " + handCount)
   if (!game.market.includes(good)) throw new Error(good + ": good not found")
 

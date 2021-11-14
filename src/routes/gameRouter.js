@@ -113,8 +113,10 @@ router.delete("/", function (req, res) {
 
 // SELL CARDS
 router.put("/:id/sell", function (req, res) {
-  const gameId = Number.parseInt(req.params.id)
-  const playerIndex = Number.parseInt(req.headers.playerindex)
+  const gameId = parseInt(req.params.id)
+  const playerIndex = parseInt(req.headers.playerindex)
+  console.log("player index = ", playerIndex)
+  console.log(typeof playerIndex)
   if (isNaN(playerIndex))
     return res.status(400).send("Missing playerindex header")
   const good = req.body.good
@@ -122,7 +124,7 @@ router.put("/:id/sell", function (req, res) {
   if (!good) return res.status(400).send("Missing good parameter")
   if (!count) return res.status(400).send("Missing count parameter")
   const game = databaseService.getGame(gameId)
-  if (!game) return res.status(404).send("Game " + gameId + " not found")
+  if (!game) return res.status(400).send("Game " + gameId + " not found")
 
   try {
     const out = gameService.sellCards(game, playerIndex, good, count)
