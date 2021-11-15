@@ -91,7 +91,6 @@ export function takeGood(game, playerIndex, good) {
     )
   const player = game._players[playerIndex]
   const handCount = player.hand.filter((e) => e !== "camel").length
-  console.log("here")
   if (handCount + 1 > 7) throw new Error("Too many cards: " + handCount)
   if (!game.market.includes(good)) throw new Error(good + ": good not found")
 
@@ -168,5 +167,33 @@ export function takeAllCamels(game, playerIndex) {
   removeItems(game.market, camels)
   addItems(player.hand, camels)
   console.log("after:\n" + camels + "\n" + game.market + "\n" + player.hand)
+  return game
+}
+
+export function sellCards(game, playerIndex, good, count) {
+  if (playerIndex !== game.currentPlayerIndex)
+    throw new Error(
+      "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
+    )
+  if (count < 1) {
+    throw new Error("Bad count: " + count + " is incorrect")
+  }
+  const player = game._players[playerIndex]
+  const handGoodCount = player.hand.filter((e) => e === good).length
+  if (handGoodCount < count)
+    throw new Error("Not enough " + good + " in your hand")
+  const token = game.tokens[good]
+  for (let i = 0; i < count; i++) {
+    removeItem(player.hand, good)
+    if (token.length > 0) {
+      player.score += token.pop()
+    }
+  }
+  try {
+    const bonusToken = game._bonusTokens[count > 5 ? 5 : count].pop()
+    player.score += bonusToken === undefined ? 0 : bonusToken
+  } catch (e) {
+    player.score += 0
+  }
   return game
 }
