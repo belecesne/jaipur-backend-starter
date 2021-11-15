@@ -341,8 +341,7 @@ describe("sell cards", () => {
 
 describe("Test take-good route", () => {
   function defaultGames() {
-    return [{ id: 1 ,
-      isDone: false,}]
+    return [{ id: 1, isDone: false }]
   }
 
   function defaultMockFS() {
@@ -424,8 +423,7 @@ describe("Test take-good route", () => {
 
 describe("Test exchange route", () => {
   function defaultGames() {
-    return [{ id: 1 ,
-      isDone: false}]
+    return [{ id: 1, isDone: false }]
   }
 
   function defaultMockFS() {

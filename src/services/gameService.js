@@ -213,7 +213,7 @@ export function sellCards(game, playerIndex, good, count) {
 }
 
 function checkEndGame(game) {
-  if (game._deck != undefined && game._deck.length <= 0) {
+  if (game._deck !== undefined && game._deck.length <= 0) {
     game.isDone = true
     return
   }
@@ -238,7 +238,7 @@ function checkEndGame(game) {
 }
 
 export function isDone(game) {
-  if(game.isDone != undefined){
+  if (game.isDone !== undefined) {
     return game.isDone
   }
   return false

@@ -271,7 +271,7 @@ describe("Sell cards", () => {
         4: [4, 6, 6, 4, 5, 5],
         5: [8, 10, 9, 8],
       },
-      isDone: true
+      isDone: true,
     })
   })
   test("should sell cards all good but no enoguh bonus token", () => {
@@ -335,7 +335,7 @@ describe("Sell cards", () => {
         4: [4, 6, 6, 4, 5, 5],
         5: [],
       },
-      isDone: true
+      isDone: true,
     })
   })
 })
