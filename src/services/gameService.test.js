@@ -336,6 +336,8 @@ describe("Sell cards", () => {
         5: [],
       },
     })
+  })
+})
 
 describe("Test takeGood", () => {
   function baseGame() {
