@@ -37,9 +37,10 @@ router.put("/:id/take-good", function (req, res) {
 // Exchange
 router.put("/:id/exchange", function (req, res) {
   const gameId = Number.parseInt(req.params.id)
+  if (isNaN(gameId)) return res.status(400).send("Bad game ID")
   const playerIndex = parseInt(req.headers.playerindex)
-  if (playerIndex === undefined)
-    return res.status(400).send("Missing playerindex header")
+  if (isNaN(playerIndex))
+    return res.status(400).send("Missing or bad playerindex header")
   const take = req.body.take
   if (!take) return res.status(400).send("Missing take parameter")
   const give = req.body.give

@@ -302,3 +302,110 @@ describe("Test take-good route", () => {
     expect(resp.statusCode).toBe(400)
   })
 })
+
+describe("Test exchange route", () => {
+  function defaultGames() {
+    return [{ id: 1 }]
+  }
+
+  function defaultMockFS() {
+    fs.readFileSync.mockImplementation(() => JSON.stringify(defaultGames()))
+  }
+
+  function defaultMockExchange() {
+    const mock = jest.fn().mockReturnValueOnce(defaultGames()[0])
+    gameService.exchange = mock
+    return mock
+  }
+
+  function defaultBody() {
+    return { take: ["diamonds", "camel"], give: ["silver", "cloth"] }
+  }
+
+  async function sendReq(game = 1, player = 9, body = defaultBody()) {
+    return await request(app)
+      .put("/games/" + game + "/exchange")
+      .set("playerIndex", player.toString())
+      .send(body === null ? {} : body)
+  }
+
+  test("Normal use", async () => {
+    defaultMockFS()
+    const mock = defaultMockExchange()
+
+    const resp = await sendReq()
+
+    expect(resp.statusCode).toBe(200)
+    expect(resp.body).toStrictEqual(defaultGames()[0])
+
+    expect(mock.mock.calls.length).toBe(1)
+    const call = mock.mock.calls[0]
+    expect(call[0]).toStrictEqual(defaultGames()[0])
+    expect(call[1]).toBe(9)
+    expect(call[2]).toStrictEqual(defaultBody().take)
+    expect(call[3]).toStrictEqual(defaultBody().give)
+  })
+
+  test("Game id not a number", async () => {
+    defaultMockFS()
+    defaultMockExchange()
+
+    const resp = await sendReq("foo")
+    expect(resp.statusCode).toBe(400)
+  })
+
+  test("Player id is not a number", async () => {
+    defaultMockFS()
+    defaultMockExchange()
+
+    const resp = await sendReq(1, "foo")
+    expect(resp.statusCode).toBe(400)
+  })
+
+  test("No body provided", async () => {
+    defaultMockFS()
+    defaultMockExchange()
+
+    const resp = await sendReq(1, 9, null)
+    expect(resp.statusCode).toBe(400)
+  })
+
+  test("No taken data", async () => {
+    defaultMockFS()
+    defaultMockExchange()
+
+    const body = defaultBody()
+    delete body.take
+    const resp = await sendReq(1, 9, body)
+    expect(resp.statusCode).toBe(400)
+  })
+
+  test("No given data", async () => {
+    defaultMockFS()
+    defaultMockExchange()
+
+    const body = defaultBody()
+    delete body.give
+    const resp = await sendReq(1, 9, body)
+    expect(resp.statusCode).toBe(400)
+  })
+
+  test("Game not found", async () => {
+    defaultMockFS()
+    defaultMockExchange()
+
+    const resp = await sendReq(2)
+    expect(resp.statusCode).toBe(404)
+  })
+
+  test("Error from excange", async () => {
+    defaultMockFS()
+    const mock = jest.fn().mockImplementation(() => {
+      throw new Error()
+    })
+    gameService.exchange = mock
+
+    const resp = await sendReq()
+    expect(resp.statusCode).toBe(400)
+  })
+})
