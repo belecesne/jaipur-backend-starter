@@ -224,10 +224,93 @@ describe("sell cards", () => {
         fs.readFileSync.mockImplementation(() => {
             return JSON.stringify([{id: 1}, {id: 2}, {id: 3}])
         })
-        const response = await request(app).put("/games/id").set("playerIndex", "foo").send({
+        const response = await request(app).put("/games/1/sell").set("playerIndex", "foo").send({
             "count": 3, "good": "silver"
         })
-        expect(response.statusCode).toBe(404)
+        expect(response.statusCode).toBe(400)
         expect(response.body).toStrictEqual("Missing playerindex header")
+    })
+    test("should sell cards missing sell parameter", async () => {
+        fs.readFileSync.mockImplementation(() => {
+            return JSON.stringify([{id: 1,
+              currentPlayerIndex: 1,}, {id: 2,
+                currentPlayerIndex: 1,}, {id: 3,
+                  currentPlayerIndex: 1,}])
+        })
+        const response = await request(app).put("/games/1/sell").set("playerIndex", 1).send({"count": 3
+      })
+        expect(response.statusCode).toBe(400)
+        expect(response.body).toStrictEqual("Missing sell parameter")
+    })
+    test("should sell cards missing count parameter", async () => {
+        fs.readFileSync.mockImplementation(() => {
+            return JSON.stringify([{id: 1,
+              currentPlayerIndex: 1,}, {id: 2,
+                currentPlayerIndex: 1,}, {id: 3,
+                  currentPlayerIndex: 1,}])
+        })
+        const response = await request(app).put("/games/1/sell").set("playerIndex", 1).send({"good": "silver"
+      })
+        expect(response.statusCode).toBe(400)
+        expect(response.body).toStrictEqual("Missing count parameter")
+    })
+    test("should sell cards bad id", async () => {
+        fs.readFileSync.mockImplementation(() => {
+            return JSON.stringify([{id: 1,
+              currentPlayerIndex: 1,}, {id: 2,
+                currentPlayerIndex: 1,}, {id: 3,
+                  currentPlayerIndex: 1,}])
+        })
+        const response = await request(app).put("/games/0/sell").set("playerIndex", 1).send({"good": "silver", "count": 3
+      })
+        expect(response.statusCode).toBe(400)
+        expect(response.body).toStrictEqual("Game 0 not found")
+    })
+    test("should sell cards bad playerindex", async () => {
+        fs.readFileSync.mockImplementation(() => {
+            return JSON.stringify([{id: 1,
+              currentPlayerIndex: 1,}, {id: 2,
+                currentPlayerIndex: 1,}, {id: 3,
+                  currentPlayerIndex: 1,}])
+        })
+        const response = await request(app).put("/games/1/sell").set("playerIndex", 0).send({"good": "silver", "count": 3
+      })
+        expect(response.statusCode).toBe(400)
+    })
+    test("should sell cards everything ok", async () => {
+        fs.readFileSync.mockImplementation(() => {
+            return JSON.stringify([{id: 1,
+              currentPlayerIndex: 0,
+              _players: [
+                {
+                  hand: ["diamonds", "diamonds", "diamonds", "diamonds", "gold"],
+                  camelsCount: 0,
+                  score: 0,
+                },
+                {
+                  hand: [],
+                  camelsCount: 0,
+                  score: 0,
+                },
+              ],
+              tokens: {
+                diamonds: [7, 7, 5, 5, 5],
+                gold: [6, 6, 5, 5, 5],
+                silver: [5, 5, 5, 5, 5],
+                cloth: [5, 3, 3, 2, 2, 1, 1],
+                spice: [5, 3, 3, 2, 2, 1, 1],
+                leather: [4, 3, 2, 1, 1, 1, 1, 1, 1],
+              },
+              _bonusTokens: {
+                3: [2, 1, 2, 3, 1, 2, 3],
+                4: [4, 6, 6, 4, 5, 5],
+                5: [8, 10, 9, 8, 10],
+              },}, {id: 2,
+                currentPlayerIndex: 1,}, {id: 3,
+                  currentPlayerIndex: 1,}])
+        })
+        const response = await request(app).put("/games/1/sell").set("playerIndex", "0").send({"good": "diamonds", "count": 3
+      })
+        expect(response.statusCode).toBe(200)
     })
 })
