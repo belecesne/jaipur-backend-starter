@@ -10,6 +10,7 @@ router.post("/", function (req, res) {
     return res.status(400).send("Missing name parameter")
   }
   const newGame = gameService.createGame(req.body.name)
+  databaseService.saveGame(newGame)
   res.status(201).json(newGame)
 })
 
@@ -27,6 +28,7 @@ router.put("/:id/take-good", function (req, res) {
 
   try {
     const out = gameService.takeGood(game, playerIndex, good)
+    databaseService.saveGame(game)
     return res.status(200).json(out)
   } catch (e) {
     console.error(e)
@@ -50,6 +52,7 @@ router.put("/:id/exchange", function (req, res) {
 
   try {
     const out = gameService.exchange(game, playerIndex, take, give)
+    databaseService.saveGame(game)
     return res.status(200).json(out)
   } catch (e) {
     console.error(e)
@@ -69,6 +72,7 @@ router.put("/:id/take-camels", function (req, res) {
 
   try {
     const out = gameService.takeAllCamels(game, playerIndex)
+    databaseService.saveGame(game)
     return res.status(200).json(out)
   } catch (e) {
     console.error(e)
