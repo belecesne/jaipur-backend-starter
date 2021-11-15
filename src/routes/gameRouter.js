@@ -16,9 +16,10 @@ router.post("/", function (req, res) {
 // Listen to PUT
 router.put("/:id/take-good", function (req, res) {
   const gameId = Number.parseInt(req.params.id)
+  if (isNaN(gameId)) return res.status(400).send("Bad game ID")
   const playerIndex = parseInt(req.headers.playerindex)
-  if (playerIndex === undefined)
-    return res.status(400).send("Missing playerindex header")
+  if (isNaN(playerIndex))
+    return res.status(400).send("Missing or bad playerindex header")
   const good = req.body.good
   if (!good) return res.status(400).send("Missing good parameter")
   const game = databaseService.getGame(gameId)
@@ -36,9 +37,10 @@ router.put("/:id/take-good", function (req, res) {
 // Exchange
 router.put("/:id/exchange", function (req, res) {
   const gameId = Number.parseInt(req.params.id)
+  if (isNaN(gameId)) return res.status(400).send("Bad game ID")
   const playerIndex = parseInt(req.headers.playerindex)
-  if (playerIndex === undefined)
-    return res.status(400).send("Missing playerindex header")
+  if (isNaN(playerIndex))
+    return res.status(400).send("Missing or bad playerindex header")
   const take = req.body.take
   if (!take) return res.status(400).send("Missing take parameter")
   const give = req.body.give
@@ -58,9 +60,10 @@ router.put("/:id/exchange", function (req, res) {
 // Take all camels
 router.put("/:id/take-camels", function (req, res) {
   const gameId = Number.parseInt(req.params.id)
+  if (isNaN(gameId)) return res.status(400).send("Bad game ID")
   const playerIndex = parseInt(req.headers.playerindex)
-  if (playerIndex === undefined)
-    return res.status(400).send("Missing playerindex header")
+  if (isNaN(playerIndex))
+    return res.status(400).send("Missing or bad playerindex header")
   const game = databaseService.getGame(gameId)
   if (!game) return res.status(404).send("Game " + gameId + " not found")
 
