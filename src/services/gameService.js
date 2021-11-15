@@ -85,6 +85,9 @@ export function createGame(name) {
 }
 
 export function takeGood(game, playerIndex, good) {
+  if (isDone(game)) {
+    throw new Error("Game" + game.id + "is done")
+  }
   if (playerIndex !== game.currentPlayerIndex)
     throw new Error(
       "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
@@ -101,6 +104,7 @@ export function takeGood(game, playerIndex, good) {
     1
   )
   game.market.push(drawCards(game._deck, 1)[0])
+  checkEndGame(game)
   return game
 }
 
@@ -125,6 +129,9 @@ function addItems(set, elts) {
 }
 
 export function exchange(game, playerIndex, take, give) {
+  if (isDone(game)) {
+    throw new Error("Game" + game.id + "is done")
+  }
   if (playerIndex !== game.currentPlayerIndex)
     throw new Error(
       "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
@@ -156,6 +163,9 @@ export function exchange(game, playerIndex, take, give) {
 }
 
 export function takeAllCamels(game, playerIndex) {
+  if (isDone(game)) {
+    throw new Error("Game" + game.id + "is done")
+  }
   if (playerIndex !== game.currentPlayerIndex)
     throw new Error(
       "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
@@ -167,10 +177,14 @@ export function takeAllCamels(game, playerIndex) {
   removeItems(game.market, camels)
   addItems(player.hand, camels)
   console.log("after:\n" + camels + "\n" + game.market + "\n" + player.hand)
+  checkEndGame(game)
   return game
 }
 
 export function sellCards(game, playerIndex, good, count) {
+  if (isDone(game)) {
+    throw new Error("Game" + game.id + "is done")
+  }
   if (playerIndex !== game.currentPlayerIndex)
     throw new Error(
       "Not player " + playerIndex + " turn, expected " + game.currentPlayerIndex
@@ -192,8 +206,41 @@ export function sellCards(game, playerIndex, good, count) {
   try {
     const bonusToken = game._bonusTokens[count > 5 ? 5 : count].pop()
     player.score += bonusToken === undefined ? 0 : bonusToken
+    checkEndGame(game)
   } catch (e) {
     player.score += 0
   }
   return game
+}
+
+function checkEndGame(game) {
+  if (game._deck != undefined && game._deck.length <= 0) {
+    game.isDone = true
+    return
+  }
+  for (const key in game.tokens) {
+    if (Object.hasOwnProperty.call(game.tokens, key)) {
+      const element = game.tokens[key]
+      if (element.length <= 0) {
+        game.isDone = true
+        return
+      }
+    }
+  }
+  for (const key in game._bonusTokens) {
+    if (Object.hasOwnProperty.call(game._bonusTokens, key)) {
+      const element = game._bonusTokens[key]
+      if (element.length <= 0) {
+        game.isDone = true
+        return
+      }
+    }
+  }
+}
+
+export function isDone(game) {
+  if(game.isDone != undefined){
+    return game.isDone
+  }
+  return false
 }
