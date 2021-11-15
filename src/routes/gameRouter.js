@@ -119,18 +119,28 @@ router.put("/:id/sell", function (req, res) {
   const gameId = parseInt(req.params.id)
   const playerIndex = parseInt(req.headers.playerindex)
   if (isNaN(playerIndex))
-    return res.status(400)
-    .json("Missing playerindex header")
-    .send("Missing playerindex header")
+    return res
+      .status(400)
+      .json("Missing playerindex header")
+      .send("Missing playerindex header")
   const good = req.body.good
   const count = req.body.count
-  if (!good) return res.status(400)
-  .json("Missing sell parameter").send("Missing sell parameter")
-  if (!count) return res.status(400)
-  .json("Missing count parameter").send("Missing count parameter")
+  if (!good)
+    return res
+      .status(400)
+      .json("Missing sell parameter")
+      .send("Missing sell parameter")
+  if (!count)
+    return res
+      .status(400)
+      .json("Missing count parameter")
+      .send("Missing count parameter")
   const game = databaseService.getGame(gameId)
-  if (!game) return res.status(400).json("Game " + gameId + " not found")
-  .send("Game " + gameId + " not found")
+  if (!game)
+    return res
+      .status(400)
+      .json("Game " + gameId + " not found")
+      .send("Game " + gameId + " not found")
   try {
     const out = gameService.sellCards(game, playerIndex, good, count)
     return res.status(200).json(out)

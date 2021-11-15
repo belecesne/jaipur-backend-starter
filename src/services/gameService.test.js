@@ -47,7 +47,6 @@ describe("Game service", () => {
   })
 })
 
-
 describe("Sell cards", () => {
   test("should sell cards but bad player index", () => {
     const game = {
