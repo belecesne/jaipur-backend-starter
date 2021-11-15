@@ -368,6 +368,16 @@ describe("Test takeGood", () => {
     expect(gameService.takeGood.bind(null, game, 0, "foo")).toThrow()
   })
 
+  test("Not enough card in deck", () => {
+    const game = baseGame()
+    game._deck = []
+    gameService.takeGood(game, 0, "cloth")
+
+    expect(game.market).toStrictEqual([])
+    expect(game._players[0].hand).toStrictEqual(["cloth"])
+    expect(game._deck).toStrictEqual([])
+  })
+
   test("Lots of camels in hand", () => {
     const game = baseGame()
     game._players[0].hand = Array(7).fill("camel")
@@ -444,6 +454,7 @@ describe("Test exchange", () => {
 describe("Test takeAllCamels", () => {
   function baseGame() {
     return {
+      _deck: ["silver", "silver"],
       market: ["camel", "cloth", "camel"],
       _players: [{ hand: ["diamonds"], camelsCount: 0 }],
       currentPlayerIndex: 0,
@@ -454,10 +465,11 @@ describe("Test takeAllCamels", () => {
     const game = baseGame()
     gameService.takeAllCamels(game, 0)
 
-    expect(game.market).toEqual(["cloth"])
+    expect(game.market.sort()).toEqual(["cloth", "silver", "silver"].sort())
     expect(game._players[0].hand.sort()).toEqual(
       ["diamonds", "camel", "camel"].sort()
     )
+    expect(game._deck).toEqual([])
   })
 
   test("No camel", () => {
@@ -467,6 +479,19 @@ describe("Test takeAllCamels", () => {
 
     expect(game.market).toEqual(["cloth"])
     expect(game._players[0].hand).toEqual(["diamonds"])
+    expect(game._deck.sort()).toEqual(baseGame()._deck.sort())
+  })
+
+  test("Not enough card in deck", () => {
+    const game = baseGame()
+    game._deck = ["silver"]
+    gameService.takeAllCamels(game, 0)
+
+    expect(game.market.sort()).toEqual(["cloth", "silver"].sort())
+    expect(game._players[0].hand.sort()).toEqual(
+      ["diamonds", "camel", "camel"].sort()
+    )
+    expect(game._deck).toEqual([])
   })
 
   test("Bad player id", () => {
