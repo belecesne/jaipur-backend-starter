@@ -271,6 +271,7 @@ describe("Sell cards", () => {
         4: [4, 6, 6, 4, 5, 5],
         5: [8, 10, 9, 8],
       },
+      isDone: true
     })
   })
   test("should sell cards all good but no enoguh bonus token", () => {
@@ -334,6 +335,7 @@ describe("Sell cards", () => {
         4: [4, 6, 6, 4, 5, 5],
         5: [],
       },
+      isDone: true
     })
   })
 })
@@ -497,5 +499,22 @@ describe("Test takeAllCamels", () => {
   test("Bad player id", () => {
     const game = baseGame()
     expect(gameService.takeAllCamels.bind(null, game, 1)).toThrow()
+  })
+})
+
+describe("Test isDone", () => {
+  function baseGame() {
+    return {
+      market: ["camel", "cloth", "camel"],
+      _players: [{ hand: ["diamonds"], camelsCount: 0 }],
+      currentPlayerIndex: 0,
+    }
+  }
+
+  test("Normal case", () => {
+    const game = baseGame()
+    const res = gameService.isDone(game)
+
+    expect(res).toStrictEqual(false)
   })
 })
