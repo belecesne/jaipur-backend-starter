@@ -103,7 +103,7 @@ export function takeGood(game, playerIndex, good) {
     game.market.findIndex((e) => e === good),
     1
   )
-  game.market.push(drawCards(game._deck, 1)[0])
+  drawCards(game._deck, 1).forEach((e) => game.market.push(e))
   checkEndGame(game)
   return game
 }
@@ -173,10 +173,9 @@ export function takeAllCamels(game, playerIndex) {
   const player = game._players[playerIndex]
 
   const camels = game.market.filter((e) => e === "camel")
-  console.log("before:\n" + camels + "\n" + game.market + "\n" + player.hand)
   removeItems(game.market, camels)
   addItems(player.hand, camels)
-  console.log("after:\n" + camels + "\n" + game.market + "\n" + player.hand)
+  drawCards(game._deck, camels.length).forEach((e) => game.market.push(e))
   checkEndGame(game)
   return game
 }
