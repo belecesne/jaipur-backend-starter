@@ -338,6 +338,11 @@ describe("Sell cards", () => {
       isDone: true,
     })
   })
+
+  test("game is done", () => {
+    const game = { id: 1, isDone: true }
+    expect(() => gameService.sellCards(game, 1, undefined, undefined)).toThrow()
+  })
 })
 
 describe("Test takeGood", () => {
@@ -390,6 +395,11 @@ describe("Test takeGood", () => {
   test("Good not found", () => {
     const game = baseGame()
     expect(gameService.takeGood.bind(null, game, 0, "missing")).toThrow()
+  })
+
+  test("game is done", () => {
+    const game = { id: 1, isDone: true }
+    expect(() => gameService.takeGood(game, 1, "gold")).toThrow()
   })
 })
 
@@ -451,6 +461,11 @@ describe("Test exchange", () => {
       gameService.exchange.bind(null, game, 0, ["silver"], ["diamonds"])
     ).toThrow()
   })
+
+  test("game is done", () => {
+    const game = { id: 1, isDone: true }
+    expect(() => gameService.exchange(game, 1, undefined, undefined)).toThrow()
+  })
 })
 
 describe("Test takeAllCamels", () => {
@@ -499,6 +514,36 @@ describe("Test takeAllCamels", () => {
   test("Bad player id", () => {
     const game = baseGame()
     expect(gameService.takeAllCamels.bind(null, game, 1)).toThrow()
+  })
+
+  test("game is done", () => {
+    const game = { id: 1, isDone: true }
+    expect(() => gameService.takeAllCamels(game, 1)).toThrow()
+  })
+})
+
+describe("Check end game", () => {
+  test("bonustoken empty", () => {
+    const game = {
+      id: 1,
+      _bonusTokens: {
+        3: [2, 1, 2, 3, 1, 2, 3],
+        4: [4, 6, 6, 4, 5, 5],
+        5: [],
+      },
+      isDone: false,
+    }
+    const res = gameService.checkEndGame(game)
+    expect(res).toStrictEqual(undefined)
+    expect(game).toStrictEqual({
+      id: 1,
+      _bonusTokens: {
+        3: [2, 1, 2, 3, 1, 2, 3],
+        4: [4, 6, 6, 4, 5, 5],
+        5: [],
+      },
+      isDone: true,
+    })
   })
 })
 

@@ -86,7 +86,7 @@ export function createGame(name) {
 
 export function takeGood(game, playerIndex, good) {
   if (isDone(game)) {
-    throw new Error("Game" + game.id + "is done")
+    throw new Error("Game " + game.id + " is done")
   }
   if (playerIndex !== game.currentPlayerIndex)
     throw new Error(
@@ -130,7 +130,7 @@ function addItems(set, elts) {
 
 export function exchange(game, playerIndex, take, give) {
   if (isDone(game)) {
-    throw new Error("Game" + game.id + "is done")
+    throw new Error("Game " + game.id + " is done")
   }
   if (playerIndex !== game.currentPlayerIndex)
     throw new Error(
@@ -164,7 +164,7 @@ export function exchange(game, playerIndex, take, give) {
 
 export function takeAllCamels(game, playerIndex) {
   if (isDone(game)) {
-    throw new Error("Game" + game.id + "is done")
+    throw new Error("Game " + game.id + " is done")
   }
   if (playerIndex !== game.currentPlayerIndex)
     throw new Error(
@@ -182,7 +182,7 @@ export function takeAllCamels(game, playerIndex) {
 
 export function sellCards(game, playerIndex, good, count) {
   if (isDone(game)) {
-    throw new Error("Game" + game.id + "is done")
+    throw new Error("Game " + game.id + " is done")
   }
   if (playerIndex !== game.currentPlayerIndex)
     throw new Error(
@@ -212,7 +212,7 @@ export function sellCards(game, playerIndex, good, count) {
   return game
 }
 
-function checkEndGame(game) {
+export function checkEndGame(game) {
   if (game._deck !== undefined && game._deck.length <= 0) {
     game.isDone = true
     return
